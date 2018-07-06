@@ -1,0 +1,59 @@
+config:
+  target: 'https://sean.codedcommerce.com'
+  phases:
+    - duration: 5
+      arrivalRate: 1
+      rampTo: 2
+  payload:
+    path: "loadtest_payload.csv"
+    fields:
+      - "userID"
+      - "email"
+      - "productID"
+      - "quantity"
+      - "authHash"
+  processor: "./loadtest_monitor.js"
+
+scenarios:
+  - flow:
+    - log: "Virtual user session for {{ email }}"
+    - get:
+        url: "/"
+    - log: "Starting a New order for {{ email }}"
+    - post:
+        url: "/wc-api/v3/orders"
+        beforeRequest: "setJSONBody"
+        afterResponse: "logHeaders"
+        headers:
+          Content-Type: "application/json"
+          Authorization: "Basic {{ authHash }}"
+        json:
+          "order":
+            "payment_details":
+                "method_id": "cheque"
+                "method_title": "Check payments"
+                "paid": false
+            "billing_address":
+                "first_name": "Bill First Name"
+                "last_name": "Bill Last Name"
+                "address_1": "1234 Test St"
+                "address_2": "Apt 1234"
+                "city": "Los Angeles"
+                "state": "CA"
+                "postcode": "91307"
+                "country": "US"
+                "email": "{{ email }}"
+                "phone": "(111) 222-3333"
+            "shipping_address":
+                "first_name": "Ship First Name"
+                "last_name": "Ship Last Name"
+                "address_1": "1234 Test St"
+                "address_2": "Apt 1234"
+                "city": "Los Angeles"
+                "state": "CA"
+                "postcode": "91307"
+                "country": "US"
+            "customer_id": "{{ userID }}"
+            "line_items":
+              - "product_id": "{{ productID }}"
+                "quantity": "{{ quantity }}"
