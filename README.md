@@ -23,7 +23,7 @@ artillery quick --count 10 -n 20 https://artillery.io/
 * Download this project to your workstation and change directory to it.
 * Create a read/write access ReST API account from WP Admin > WooCommerce > Settings > Advanced > REST API.
 * Put your ReST account key and secret values into a [base64 Hash generator](https://www.base64decode.org) formatted as key:secret to get your authentication hash.
-* Make a CSV file `loadtest_payload.csv` with several lines containing input data: UserID,EmailAddress,ProductID,Qualtity,AuthHash
+* Make a CSV file `loadtest_payload.csv` with several lines containing input data: UserID,EmailAddress,ProductID,Quantity,AuthHash
 * Edit the YML file and ensure the duration, arrivalRate, and rampTo values are low for your initial test.
 * Edit the YML file and change the `target` value to the development site you wish to load test.
 * Run `artillery run loadtest_orders.yml` to execute your test and see the results in standard output.

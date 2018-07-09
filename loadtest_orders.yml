@@ -1,7 +1,7 @@
 config:
   target: 'https://sean.codedcommerce.com'
   phases:
-    - duration: 5
+    - duration: 30
       arrivalRate: 1
       rampTo: 2
   payload:
