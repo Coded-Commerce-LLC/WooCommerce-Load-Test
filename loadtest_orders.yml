@@ -7,21 +7,22 @@ config:
   payload:
     path: "loadtest_payload.csv"
     fields:
-      - "userID"
+      - "sequenceNum"
+      - "customer_id"
       - "email"
-      - "productID"
+      - "product_id"
       - "quantity"
       - "authHash"
   processor: "./loadtest_monitor.js"
 
 scenarios:
   - flow:
-    - log: "Virtual user session for {{ email }}"
+    - log: "Virtual user session for sequence number {{ sequenceNum }}"
     - get:
         url: "/"
-    - log: "Starting a New order for {{ email }}"
+    - log: "Starting a new order for sequence number {{ sequenceNum }}"
     - post:
-        url: "/wp-json/wc/v2/orders" #?_jsonp=callback
+        url: "/wp-json/wc/v2/orders"
         beforeRequest: "setJSONBody"
         afterResponse: "logHeaders"
         headers:
@@ -32,10 +33,10 @@ scenarios:
             "payment_method_title": "Check payments"
             "set_paid": false
             "billing":
-                "first_name": "Bill First Name"
-                "last_name": "Bill Last Name"
-                "address_1": "1234 Test St"
-                "address_2": "Apt 1234"
+                "first_name": "Bill First Name {{ sequenceNum }}"
+                "last_name": "Bill Last Name {{ sequenceNum }}"
+                "address_1": "{{ sequenceNum }} Test St"
+                "address_2": "Apt {{ sequenceNum }}"
                 "city": "Los Angeles"
                 "state": "CA"
                 "postcode": "91307"
@@ -43,15 +44,15 @@ scenarios:
                 "email": "{{ email }}"
                 "phone": "(111) 222-3333"
             "shipping":
-                "first_name": "Ship First Name"
-                "last_name": "Ship Last Name"
-                "address_1": "1234 Test St"
-                "address_2": "Apt 1234"
+                "first_name": "Ship First Name {{ sequenceNum }}"
+                "last_name": "Ship Last Name {{ sequenceNum }}"
+                "address_1": "{{ sequenceNum }} Test St"
+                "address_2": "Apt {{ sequenceNum }}"
                 "city": "Los Angeles"
                 "state": "CA"
                 "postcode": "91307"
                 "country": "US"
-            "customer_id": "{{ userID }}"
+            "customer_id": "{{ customer_id }}"
             "line_items":
-              - "product_id": "{{ productID }}"
+              - "product_id": "{{ product_id }}"
                 "quantity": "{{ quantity }}"
