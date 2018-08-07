@@ -3,13 +3,11 @@ config:
   phases:
     - duration: 30
       arrivalRate: 1
-      rampTo: 2
+      rampTo: 5
   payload:
     path: "loadtest_payload.csv"
     fields:
-      - "sequenceNum"
-      - "customer_id"
-      - "email"
+      - "name"
       - "product_id"
       - "quantity"
       - "authHash"
@@ -17,10 +15,46 @@ config:
 
 scenarios:
   - flow:
-    - log: "Virtual user session for sequence number {{ sequenceNum }}"
+    - function: "generateUsername"
+    - log: "Virtual user session for sequence {{ name }}"
     - get:
         url: "/"
-    - log: "Starting a new order for sequence number {{ sequenceNum }}"
+    - log: "Starting a new order for sequence {{ name }}"
+    - post:
+        url: "/wp-json/wc/v2/customers"
+        beforeRequest: "setJSONBody"
+        afterResponse: "logHeaders"
+        headers:
+          Content-Type: "application/json"
+          Authorization: "Basic {{ authHash }}"
+        json:
+            "email": "{{ username }}@codedcommerce.com"
+            "first_name": "Bill First Name {{ name }}"
+            "last_name": "Bill Last Name {{ name }}"
+            "username": "{{ username }}"
+            "billing":
+                "first_name": "Bill First Name {{ name }}"
+                "last_name": "Bill Last Name {{ name }}"
+                "address_1": "{{ name }} Test St"
+                "address_2": "Apt {{ name }}"
+                "city": "Los Angeles"
+                "state": "CA"
+                "postcode": "91307"
+                "country": "US"
+                "email": "{{ username }}@codedcommerce.com"
+                "phone": "(111) 222-3333"
+            "shipping":
+                "first_name": "Bill First Name {{ name }}"
+                "last_name": "Bill Last Name {{ name }}"
+                "address_1": "{{ name }} Test St"
+                "address_2": "Apt {{ name }}"
+                "city": "Los Angeles"
+                "state": "CA"
+                "postcode": "91307"
+                "country": "US"
+        capture:
+          json: "$.id"
+          as: "customer_id"
     - post:
         url: "/wp-json/wc/v2/orders"
         beforeRequest: "setJSONBody"
@@ -33,21 +67,21 @@ scenarios:
             "payment_method_title": "Check payments"
             "set_paid": false
             "billing":
-                "first_name": "Bill First Name {{ sequenceNum }}"
-                "last_name": "Bill Last Name {{ sequenceNum }}"
-                "address_1": "{{ sequenceNum }} Test St"
-                "address_2": "Apt {{ sequenceNum }}"
+                "first_name": "Bill First Name {{ name }}"
+                "last_name": "Bill Last Name {{ name }}"
+                "address_1": "{{ name }} Test St"
+                "address_2": "Apt {{ name }}"
                 "city": "Los Angeles"
                 "state": "CA"
                 "postcode": "91307"
                 "country": "US"
-                "email": "{{ email }}"
+                "email": "{{ username }}@codedcommerce.com"
                 "phone": "(111) 222-3333"
             "shipping":
-                "first_name": "Ship First Name {{ sequenceNum }}"
-                "last_name": "Ship Last Name {{ sequenceNum }}"
-                "address_1": "{{ sequenceNum }} Test St"
-                "address_2": "Apt {{ sequenceNum }}"
+                "first_name": "Ship First Name {{ name }}"
+                "last_name": "Ship Last Name {{ name }}"
+                "address_1": "{{ name }} Test St"
+                "address_2": "Apt {{ name }}"
                 "city": "Los Angeles"
                 "state": "CA"
                 "postcode": "91307"
