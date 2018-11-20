@@ -1,5 +1,8 @@
 config:
-  target: 'https://sean.codedcommerce.com'
+  target: 'https://dev-sean-sandbox.pantheonsite.io'
+  #tls: {
+  #  "rejectUnauthorized": false
+  #}
   phases:
     - duration: 30
       arrivalRate: 1
