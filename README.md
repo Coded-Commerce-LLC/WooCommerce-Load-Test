@@ -5,6 +5,8 @@ Places unpaid orders using a ReST API authorized account.
 
 Uses the [Artillery.io project](https://artillery.io) based on Node.JS
 
+Also includes a synthetic test script powered by [Puppeteer project](https://github.com/GoogleChrome/puppeteer)
+
 ## Prerequisites
 
 First, install Node.JS onto your workstation, if not already installed.
@@ -44,6 +46,14 @@ The CSV file records are used randomly for load test source data. You can put as
 Refer to the Artillery.io documentation for details on [configuration](https://artillery.io/docs/script-reference/).
 
 If you wish to place paid orders or do a more elaborate load test, for example using a credit card sandbox account, you will need to use more synthetic tools such as CasperJS to emulate a web browser.
+
+### Synthetic Test
+
+The load test it not currently hooked into the synthetic test. Still working on that.
+
+To install Puppeteer `sudo npm install -g puppeteer --unsafe-perm=true --allow-root`
+
+To run Puppeteer (Chromium headless browser) with our test script `node synthetic-test.js`
 
 ## Author
 
