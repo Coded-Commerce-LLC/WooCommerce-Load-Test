@@ -34,7 +34,7 @@ sudo npm install -g artillery@latest --unsafe-perm=true --allow-root
 * Edit the YML file and ensure the `duration`, `arrivalRate`, and `rampTo` values are low for your initial test.
 * Edit the YML file and change the `target` value to the development site you wish to load test.
 * Disable emails on your sandbox site under WooCommerce > Settings > Emails.
-* Run `artillery run loadtest_orders.yml` to execute your test and see the results in standard output.
+* Run `artillery run loadtest_rest_api.yml` to execute your test and see the results in standard output.
 * If you run into any errors, try debugging with the `loadtest_monitor.js` file response body function.
 
 ### Further Notes
@@ -49,7 +49,7 @@ If you wish to place paid orders or do a more elaborate load test, for example u
 
 ### Synthetic Test
 
-The load test it not currently hooked into the synthetic test. Still working on that.
+The load test is not currently hooked into the synthetic test. Still working on that.
 
 To install Puppeteer `sudo npm install -g puppeteer --unsafe-perm=true --allow-root`
 
