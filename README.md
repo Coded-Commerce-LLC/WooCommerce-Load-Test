@@ -34,7 +34,8 @@ sudo npm install -g artillery@latest --unsafe-perm=true --allow-root
 * Edit the YML file and ensure the `duration`, `arrivalRate`, and `rampTo` values are low for your initial test.
 * Edit the YML file and change the `target` value to the development site you wish to load test.
 * Disable emails on your sandbox site under WooCommerce > Settings > Emails.
-* Run `artillery run loadtest_rest_api.yml` to execute your test and see the results in standard output.
+* Run `artillery run loadtest_rest_api.yml -o results.json` to execute your test and see the results in standard output.
+* Enter `artillery report results.json` to view a graphical report of results.
 * If you run into any errors, try debugging with the `loadtest_monitor.js` file response body function.
 
 ### Further Notes

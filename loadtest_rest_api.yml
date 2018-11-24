@@ -14,7 +14,7 @@ config:
       - "product_id"
       - "quantity"
       - "authHash"
-  processor: "./loadtest_monitor.js"
+  processor: "./loadtest_rest_api.js"
 
 scenarios:
   - flow:

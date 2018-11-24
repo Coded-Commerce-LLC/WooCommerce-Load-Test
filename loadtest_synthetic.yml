@@ -1,0 +1,23 @@
+config:
+  target: 'https://dev-sean-sandbox.pantheonsite.io'
+  #tls: {
+  #  "rejectUnauthorized": false
+  #}
+  phases:
+    - duration: 10
+      arrivalRate: 1
+      rampTo: 5
+  payload:
+    path: "loadtest_payload.csv"
+    fields:
+      - "name"
+      - "product_id"
+      - "quantity"
+      - "authHash"
+  processor: "./loadtest_synthetic.js"
+
+scenarios:
+  - flow:
+    - log: "Start virtual user session for sequence {{ name }}"
+    - function: "runTest"
+    - log: "End virtual user session for sequence {{ name }}"
