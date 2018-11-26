@@ -16,8 +16,6 @@ First, install Node.JS onto your workstation, if not already installed.
 Next, install the artillery.io project:
 ```
 sudo npm install -g artillery --unsafe-perm=true --allow-root
-artillery -V
-artillery quick --count 10 -n 20 https://artillery.io/
 ```
 
 Or, to update an existing artillery.io installation:
@@ -25,7 +23,7 @@ Or, to update an existing artillery.io installation:
 sudo npm install -g artillery@latest --unsafe-perm=true --allow-root
 ```
 
-## Running the tests
+## Running the load test
 
 * Download this project to your workstation and change directory to it.
 * Create a read/write access ReST API account from WP Admin > WooCommerce > Settings > Advanced > REST API.
@@ -40,21 +38,20 @@ sudo npm install -g artillery@latest --unsafe-perm=true --allow-root
 
 ### Further Notes
 
-I recommend having an application performance monitoring tool running on your development environment so you can examine the bottlenecks that load testing exposes. The most popular tool is New Relic.
-
-The CSV file records are used randomly for load test source data. You can put as few or as many records in there you wish.
-
-Refer to the Artillery.io documentation for details on [configuration](https://artillery.io/docs/script-reference/).
-
-If you wish to place paid orders or do a more elaborate load test, for example using a credit card sandbox account, you will need to use more synthetic tools such as CasperJS to emulate a web browser.
+* I recommend having an application performance monitoring tool running on your development environment so you can examine the bottlenecks that load testing exposes. The most popular tool is New Relic.
+* The CSV file records are used randomly for load test source data. You can put as few or as many records in there you wish.
+* Refer to the Artillery.io documentation for details on [configuration](https://artillery.io/docs/script-reference/).
+* If you wish to place paid orders or do a more elaborate load test, for example using a credit card sandbox account, you will need to use more synthetic tools such as CasperJS to emulate a web browser.
 
 ### Synthetic Test
 
-The load test is not currently hooked into the synthetic test. Still working on that.
+* First, install Puppeteer by running  `sudo npm install -g puppeteer --unsafe-perm=true --allow-root`
+* Run Puppeteer (Chromium headless browser) with our test script `node synthetic-standalone.js`
 
-To install Puppeteer `sudo npm install -g puppeteer --unsafe-perm=true --allow-root`
+### Synthetic Load Test
 
-To run Puppeteer (Chromium headless browser) with our test script `node synthetic-test.js`
+* Run `artillery run loadtest_synthetic.yml -o results.json`.
+* Enter `artillery report results.json` to view a graphical report of results.
 
 ## Author
 
