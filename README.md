@@ -13,12 +13,7 @@ First, install Node.JS onto your workstation, if not already installed.
 
 [Download it from this link](https://nodejs.org/en/download/)
 
-Next, install the artillery.io project:
-```
-sudo npm install -g artillery --unsafe-perm=true --allow-root
-```
-
-Or, to update an existing artillery.io installation:
+Next, install or update the artillery.io project:
 ```
 sudo npm install -g artillery@latest --unsafe-perm=true --allow-root
 ```
@@ -41,11 +36,10 @@ sudo npm install -g artillery@latest --unsafe-perm=true --allow-root
 * I recommend having an application performance monitoring tool running on your development environment so you can examine the bottlenecks that load testing exposes. The most popular tool is New Relic.
 * The CSV file records are used randomly for load test source data. You can put as few or as many records in there you wish.
 * Refer to the Artillery.io documentation for details on [configuration](https://artillery.io/docs/script-reference/).
-* If you wish to place paid orders or do a more elaborate load test, for example using a credit card sandbox account, you will need to use more synthetic tools such as CasperJS to emulate a web browser.
 
 ### Synthetic Test
 
-* First, install Puppeteer by running  `sudo npm install -g puppeteer --unsafe-perm=true --allow-root`
+* First, install or update Puppeteer by running  `sudo npm install -g puppeteer@latest --unsafe-perm=true --allow-root`
 * Run Puppeteer (Chromium headless browser) with our test script `node synthetic-standalone.js`
 
 ### Synthetic Load Test
