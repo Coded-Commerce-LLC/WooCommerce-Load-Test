@@ -90,6 +90,9 @@ async function runTest( context, events, next ) {
 		var counter_stop_ms = ( counter_stop.getTime() + '.' + counter_stop.getMilliseconds() );
 		context.vars.lapsed = counter_stop_ms - counter_start_ms;
 
+		// Process Latency
+		events.emit( 'histogram', 'HeadlessChromiumLatency', context.vars.lapsed );
+
 	// Catch Errors
 	} catch( error ) {
 		console.log( 'ERROR with sequence ' + context.vars.name + ' quantity ' + context.vars.quantity + ': ' + error );
