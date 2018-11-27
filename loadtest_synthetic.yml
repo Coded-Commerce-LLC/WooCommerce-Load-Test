@@ -1,5 +1,5 @@
 config:
-  target: 'https://dev-sean-sandbox.pantheonsite.io'
+  target: 'https://dev-sean-sandbox.pantheonsite.io/shop/'
   tls: {
     "rejectUnauthorized": false
   }
@@ -20,4 +20,4 @@ scenarios:
   - flow:
     - log: "Start virtual user {{ name }}, quantity {{ quantity }}"
     - function: "runTest"
-    - log: "End virtual user {{ name }}, quantity {{ quantity }}, order number {{ order_number }}, lapsed {{ lapsed }}"
+    - log: "End virtual user {{ name }}, quantity {{ quantity }}, order number {{ order_number }}, lapsed {{ lapsed }}ms"

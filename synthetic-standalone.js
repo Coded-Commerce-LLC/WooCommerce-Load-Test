@@ -20,9 +20,16 @@ const puppeteer = require( '/usr/local/lib/node_modules/puppeteer' );
 		await page.screenshot( { path: 'step2-added-to-cart.png', fullPage: true } );
 		await page.click( 'a.added_to_cart' );
 
+		// Set Quantity
+		await page.waitForSelector( 'input.qty' );
+		await page.evaluate( () => { document.querySelector( 'input.qty' ).value = '' } );
+		await page.type( 'input.qty', '10' );
+		await page.waitForSelector( "button[name='update_cart']" );
+		await page.click( "button[name='update_cart']" );
+		await page.screenshot( { path: 'step3-cart-qty.png', fullPage: true } );
+
 		// Click Checkout Button
 		await page.waitForSelector( 'a.checkout-button' );
-		await page.screenshot( { path: 'step3-cart.png', fullPage: true } );
 		await page.click( 'a.checkout-button' );
 
 		// Checkout Page Loaded
@@ -45,14 +52,12 @@ const puppeteer = require( '/usr/local/lib/node_modules/puppeteer' );
 		await page.type( "label[for='billing_state']", 'California' + String.fromCharCode( 13 ) );
 
 		// Wait For AJAX Refresh
-		await page.evaluate(() => {
+		await page.evaluate( () => {
 			let dom = document.querySelector( 'tr.order-total span.amount' );
 			dom.parentNode.removeChild( dom );
 		} );
 		await page.waitForSelector( 'tr.order-total span.amount' );
-		var date = new Date();
-		var timestamp = date.getTime();
-		await page.screenshot( { path: 'step5-checkout-' + timestamp + '.png', fullPage: true } );
+		await page.screenshot( { path: 'step4-checkout.png', fullPage: true } );
 
 		// Submit Checkout
 		await page.click( 'button#place_order' );
@@ -64,7 +69,7 @@ const puppeteer = require( '/usr/local/lib/node_modules/puppeteer' );
 		);
 		console.log( 'Order placed: ' + order_number.trim() );
 		await page.screenshot( {
-			path: 'step6-order-' + order_number.trim() + '-placed.png',
+			path: 'step5-order-' + order_number.trim() + '-placed.png',
 			fullPage: true
 		} );
 
