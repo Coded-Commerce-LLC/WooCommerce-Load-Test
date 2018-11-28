@@ -4,7 +4,7 @@ config:
   #  "rejectUnauthorized": false
   #}
   phases:
-    - duration: 30
+    - duration: 45
       arrivalRate: 1
       rampTo: 5
   payload:

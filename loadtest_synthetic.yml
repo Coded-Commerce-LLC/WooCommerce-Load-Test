@@ -6,7 +6,7 @@ config:
   phases:
     - duration: 10
       arrivalRate: 1
-      rampTo: 3
+      rampTo: 5
   payload:
     path: "loadtest_payload.csv"
     fields:
@@ -18,6 +18,6 @@ config:
 
 scenarios:
   - flow:
-    - log: "Start virtual user {{ name }}, quantity {{ quantity }}"
+    - log: "Start virtual user {{ name }}, product_id {{ product_id }}, quantity {{ quantity }}"
     - function: "runTest"
-    - log: "End virtual user {{ name }}, quantity {{ quantity }}, order number {{ order_number }}, lapsed {{ lapsed }}ms"
+    - log: "Stop virtual user {{ counter_start_ms }}, order number {{ order_number }}, lapsed {{ lapsed }} ms"
