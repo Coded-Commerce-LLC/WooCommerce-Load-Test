@@ -56,7 +56,7 @@ async function runTest( context, events, next ) {
 		// Checkout Page Loaded
 		await context.page.waitForSelector( 'button#place_order', { timeout: 45000 } );
 
-		// Complete Checkout Form
+		// Complete Checkout Form (AJAX)
 		await context.page.type( 'input#billing_first_name', 'Bill First Name ' + context.vars.name );
 		await context.page.type( 'input#billing_last_name', 'Bill Last Name ' + context.vars.name  );
 		await context.page.type( 'input#billing_address_1', '12345 ' + context.vars.name + ' St.' );
@@ -66,7 +66,7 @@ async function runTest( context, events, next ) {
 		await context.page.type( 'input#billing_phone', '111-222-3333' );
 		await context.page.type( 'input#billing_email', context.vars.name + '@codedcommerce.com' );
 
-		// Complete Payment Method
+		// Complete Payment Method (AJAX)
 		await context.page.click( "label[for='payment_method_cod']" );
 
 		// State Drop Down (AJAX)

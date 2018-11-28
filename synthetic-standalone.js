@@ -22,17 +22,13 @@ const puppeteer = require( '/usr/local/lib/node_modules/puppeteer' );
 
 		// Set Quantity (AJAX)
 		await page.waitForSelector( 'input.qty' );
-		await page.evaluate( () => {
-			let dom = document.querySelector( 'tr.order-total span.amount' );
-			dom.parentNode.removeChild( dom );
-		} );
 		await page.evaluate( () => { document.querySelector( 'input.qty' ).value = '' } );
 		await page.type( 'input.qty', '10' );
 		await page.waitForSelector( "button[name='update_cart']" );
 		await page.click( "button[name='update_cart']" );
 
 		// Wait For AJAX Refresh
-		await page.waitForSelector( 'tr.order-total span.amount' );
+		await page.waitFor( 1000 );
 		await page.screenshot( { path: 'step3-cart-qty.png', fullPage: true } );
 
 		// Click Checkout Button
@@ -41,7 +37,7 @@ const puppeteer = require( '/usr/local/lib/node_modules/puppeteer' );
 		// Checkout Page Loaded
 		await page.waitForSelector( 'button#place_order' );
 
-		// Complete Checkout Form
+		// Complete Checkout Form (AJAX)
 		await page.type( 'input#billing_first_name', 'First Name' );
 		await page.type( 'input#billing_last_name', 'Last Name' );
 		await page.type( 'input#billing_address_1', '12345 Test St.' );
@@ -50,19 +46,15 @@ const puppeteer = require( '/usr/local/lib/node_modules/puppeteer' );
 		await page.type( 'input#billing_phone', '111-222-3333' );
 		await page.type( 'input#billing_email', 'tester@codedcommerce.com' );
 
-		// Complete Payment Method
+		// Complete Payment Method (AJAX)
 		await page.click( "label[for='payment_method_cod']" );
 
-		// State Drop Down
-		await page.evaluate( () => {
-			let dom = document.querySelector( 'tr.order-total span.amount' );
-			dom.parentNode.removeChild( dom );
-		} );
+		// State Drop Down (AJAX)
 		await page.click( "label[for='billing_state']" );
 		await page.type( "label[for='billing_state']", 'California' + String.fromCharCode( 13 ) );
 
 		// Wait For AJAX Refresh
-		await page.waitForSelector( 'tr.order-total span.amount' );
+		await page.waitFor( 1000 );
 		await page.screenshot( { path: 'step4-checkout.png', fullPage: true } );
 
 		// Submit Checkout
@@ -79,7 +71,7 @@ const puppeteer = require( '/usr/local/lib/node_modules/puppeteer' );
 			fullPage: true
 		} );
 
-		// End
+		// Close Browser
 		await browser.close();
 
 	// Catch Errors
