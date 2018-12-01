@@ -4,6 +4,7 @@ module.exports = { runTest }
 
 // Include Puppeteer
 const puppeteer = require( '/usr/local/lib/node_modules/puppeteer' );
+const test_url = 'https://dev-sean-sandbox.pantheonsite.io/shop/';
 
 // Increase Event Listeners
 process.setMaxListeners( 0 );
@@ -23,10 +24,7 @@ async function runTest( context, events, next ) {
 		context.browser = await puppeteer.launch( { headless: true } );
 		context.page = await context.browser.newPage();
 		await context.page.setViewport( { width: 1280, height: 1280 } )
-		await context.page.goto(
-			'https://dev-sean-sandbox.pantheonsite.io/shop/',
-			{ timeout: 45000, 'waitUntil' : 'networkidle0' }
-		);
+		await context.page.goto( test_url, { timeout: 45000, 'waitUntil' : 'networkidle0' } );
 		await context.page.setRequestInterception( false );
 		await context.page.waitForSelector( "a[data-product_id='" + context.vars.product_id + "']" );
 			//await context.page.screenshot( { path: 'step1-home-' + counter_start_ms + '.png', fullPage: true } );

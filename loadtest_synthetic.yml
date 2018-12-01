@@ -1,8 +1,8 @@
 config:
   target: 'https://dev-sean-sandbox.pantheonsite.io/shop/'
-  tls: {
-    "rejectUnauthorized": false
-  }
+  #tls: {
+  #  "rejectUnauthorized": false
+  #}
   phases:
     - duration: 10
       arrivalRate: 1
