@@ -6,7 +6,7 @@ config:
   phases:
     - duration: 10
       arrivalRate: 1
-      rampTo: 5
+      rampTo: 10
   payload:
     path: "loadtest_payload.csv"
     fields:

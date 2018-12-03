@@ -24,7 +24,7 @@ async function runTest( context, events, next ) {
 		context.browser = await puppeteer.launch( { headless: true } );
 		context.page = await context.browser.newPage();
 		await context.page.setViewport( { width: 1280, height: 1280 } )
-		await context.page.goto( test_url, { timeout: 45000, 'waitUntil' : 'networkidle0' } );
+		await context.page.goto( test_url, { timeout: 100000, 'waitUntil' : 'networkidle0' } );
 		await context.page.setRequestInterception( false );
 		await context.page.waitForSelector( "a[data-product_id='" + context.vars.product_id + "']" );
 			//await context.page.screenshot( { path: 'step1-home-' + counter_start_ms + '.png', fullPage: true } );
@@ -51,8 +51,24 @@ async function runTest( context, events, next ) {
 		// Click Checkout Button
 		await context.page.click( 'a.checkout-button' );
 
+		// Maybe Click It For The Second Time
+		var still_there = await context.page.evaluate(
+			() => document.querySelector( 'a.checkout-button' )
+		);
+		if( still_there !== null ) {
+			await context.page.click( 'a.checkout-button' );
+		}
+
+		// Maybe Click It For The Third Time
+		var still_there = await context.page.evaluate(
+			() => document.querySelector( 'a.checkout-button' )
+		);
+		if( still_there !== null ) {
+			await context.page.click( 'a.checkout-button' );
+		}
+
 		// Checkout Page Loaded
-		await context.page.waitForSelector( 'button#place_order', { timeout: 45000 } );
+		await context.page.waitForSelector( 'button#place_order', { timeout: 60000 } );
 
 		// Complete Checkout Form (AJAX)
 		await context.page.type( 'input#billing_first_name', 'Bill First Name ' + context.vars.name );
@@ -78,8 +94,24 @@ async function runTest( context, events, next ) {
 		// Submit Checkout
 		await context.page.click( 'button#place_order' );
 
+		// Maybe Click It For The Second Time
+		var still_there = await context.page.evaluate(
+			() => document.querySelector( 'button#place_order' )
+		);
+		if( still_there !== null ) {
+			await context.page.click( 'button#place_order' );
+		}
+
+		// Maybe Click It For The Third Time
+		var still_there = await context.page.evaluate(
+			() => document.querySelector( 'button#place_order' )
+		);
+		if( still_there !== null ) {
+			await context.page.click( 'button#place_order' );
+		}
+
 		// Order Receipt
-		await context.page.waitForSelector( 'li.order', { timeout: 45000 } );
+		await context.page.waitForSelector( 'li.order', { timeout: 60000 } );
 		context.vars.order_number = await context.page.evaluate(
 			() => document.querySelector( 'li.order strong' ).textContent
 		);
