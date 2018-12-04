@@ -24,7 +24,7 @@ async function runTest( context, events, next ) {
 		context.browser = await puppeteer.launch( { headless: true } );
 		context.page = await context.browser.newPage();
 		await context.page.setViewport( { width: 1280, height: 1280 } )
-		await context.page.goto( test_url, { timeout: 100000, 'waitUntil' : 'networkidle0' } );
+		await context.page.goto( test_url, { timeout: 200000, 'waitUntil' : 'networkidle0' } );
 		await context.page.setRequestInterception( false );
 		await context.page.waitForSelector( "a[data-product_id='" + context.vars.product_id + "']" );
 			//await context.page.screenshot( { path: 'step1-home-' + counter_start_ms + '.png', fullPage: true } );
@@ -49,26 +49,10 @@ async function runTest( context, events, next ) {
 			//await context.page.screenshot( { path: 'step3-cart-qty-' + counter_start_ms + '.png', fullPage: true } );
 
 		// Click Checkout Button
-		await context.page.click( 'a.checkout-button' );
-
-		// Maybe Click It For The Second Time
-		var still_there = await context.page.evaluate(
-			() => document.querySelector( 'a.checkout-button' )
-		);
-		if( still_there !== null ) {
-			await context.page.click( 'a.checkout-button' );
-		}
-
-		// Maybe Click It For The Third Time
-		var still_there = await context.page.evaluate(
-			() => document.querySelector( 'a.checkout-button' )
-		);
-		if( still_there !== null ) {
-			await context.page.click( 'a.checkout-button' );
-		}
+		clickAsMuchAsNeeded( context, 'a.checkout-button' );
 
 		// Checkout Page Loaded
-		await context.page.waitForSelector( 'button#place_order', { timeout: 60000 } );
+		await context.page.waitForSelector( 'button#place_order', { timeout: 150000 } );
 
 		// Complete Checkout Form (AJAX)
 		await context.page.type( 'input#billing_first_name', 'Bill First Name ' + context.vars.name );
@@ -92,26 +76,10 @@ async function runTest( context, events, next ) {
 			//await context.page.screenshot( { path: 'step4-checkout-' + counter_start_ms + '.png', fullPage: true } );
 
 		// Submit Checkout
-		await context.page.click( 'button#place_order' );
-
-		// Maybe Click It For The Second Time
-		var still_there = await context.page.evaluate(
-			() => document.querySelector( 'button#place_order' )
-		);
-		if( still_there !== null ) {
-			await context.page.click( 'button#place_order' );
-		}
-
-		// Maybe Click It For The Third Time
-		var still_there = await context.page.evaluate(
-			() => document.querySelector( 'button#place_order' )
-		);
-		if( still_there !== null ) {
-			await context.page.click( 'button#place_order' );
-		}
+		clickAsMuchAsNeeded( context, 'button#place_order' );
 
 		// Order Receipt
-		await context.page.waitForSelector( 'li.order', { timeout: 60000 } );
+		await context.page.waitForSelector( 'li.order', { timeout: 100000 } );
 		context.vars.order_number = await context.page.evaluate(
 			() => document.querySelector( 'li.order strong' ).textContent
 		);
@@ -136,4 +104,19 @@ async function runTest( context, events, next ) {
 
 	// Return
 	return next();
+}
+
+async function clickAsMuchAsNeeded( context, selector ) {
+	await context.page.click( selector );
+	for( var i = 0 ; i < 10; i ++ ) {
+		try {
+			var still_there = await context.page.evaluate(
+				() => document.querySelector( selector )
+			);
+			if( still_there !== null ) {
+				await context.page.click( selector );
+			}
+		} catch( error ) {
+		}
+	}
 }
