@@ -13,9 +13,14 @@ First, install Node.JS onto your workstation, if not already installed.
 
 [Download it from this link](https://nodejs.org/en/download/)
 
+Or, to update an existing installation:
+```
+sudo npm install -g npm@latest
+```
+
 Next, install or update the artillery.io project:
 ```
-sudo npm install -g artillery@latest --unsafe-perm=true --allow-root
+sudo npm install -g artillery@1.6.0-25 --unsafe-perm=true --allow-root
 ```
 
 ## Running the load test
