@@ -4,7 +4,7 @@ module.exports = { runTest }
 
 // Include Puppeteer
 const puppeteer = require( '/usr/local/lib/node_modules/puppeteer' );
-const test_url = 'https://dev-sean-sandbox.pantheonsite.io/shop/';
+const test_url = 'https://demo.acceleratedstore.com/shop/';
 
 // Increase Event Listeners
 process.setMaxListeners( 0 );

@@ -1,5 +1,5 @@
 config:
-  target: 'https://dev-sean-sandbox.pantheonsite.io'
+  target: 'https://demo.acceleratedstore.com/'
   #tls: {
   #  "rejectUnauthorized": false
   #}

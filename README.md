@@ -15,7 +15,7 @@ First, install Node.JS onto your workstation, if not already installed.
 
 Or, to update an existing installation:
 ```
-sudo npm install -g npm@latest
+sudo npm install -g npm@latest --unsafe-perm=true --allow-root
 ```
 
 Next, install or update the artillery.io project:
