@@ -1,10 +1,12 @@
 
+// Test Site
+const test_url = 'https://demo.acceleratedstore.com/shop/';
+
 // Exports
 module.exports = { runTest }
 
 // Include Puppeteer
 const puppeteer = require( '/usr/local/lib/node_modules/puppeteer' );
-const test_url = 'https://demo.acceleratedstore.com/shop/';
 
 // Increase Event Listeners
 process.setMaxListeners( 0 );
@@ -12,27 +14,26 @@ process.setMaxListeners( 0 );
 // Test Function
 async function runTest( context, events, next ) {
 
+	// Start Counter
+	var counter_start = new Date();
+	var counter_start_ms = ( counter_start.getTime() + '.' + counter_start.getMilliseconds() );
+	context.vars.counter_start_ms = counter_start_ms;
+
 	// Try Catch
 	try {
-
-		// Start Counter
-		var counter_start = new Date();
-		var counter_start_ms = ( counter_start.getTime() + '.' + counter_start.getMilliseconds() );
-		context.vars.counter_start_ms = counter_start_ms;
 
 		// Open Browser
 		context.browser = await puppeteer.launch( { headless: true } );
 		context.page = await context.browser.newPage();
 		await context.page.setViewport( { width: 1280, height: 1280 } )
-		await context.page.goto( test_url, { timeout: 200000, 'waitUntil' : 'networkidle0' } );
-		await context.page.setRequestInterception( false );
+
+		// Hit URL
+		await context.page.goto( test_url, { 'waitUntil' : 'networkidle0' } );
 		await context.page.waitForSelector( "a[data-product_id='" + context.vars.product_id + "']" );
-			//await context.page.screenshot( { path: 'step1-home-' + counter_start_ms + '.png', fullPage: true } );
 
 		// Click Add To Cart Button
 		await context.page.click( "a[data-product_id='" + context.vars.product_id + "']" );
 		await context.page.waitForSelector( 'a.added_to_cart' );
-			//await context.page.screenshot( { path: 'step2-added-to-cart-' + counter_start_ms + '.png', fullPage: true } );
 
 		// Click View Cart Button
 		await context.page.click( 'a.added_to_cart' );
@@ -40,19 +41,21 @@ async function runTest( context, events, next ) {
 		// Set Quantity (AJAX)
 		await context.page.waitForSelector( 'input.qty' );
 		await context.page.evaluate( () => { document.querySelector( 'input.qty' ).value = '' } );
-		await context.page.type( 'input.qty', context.vars.quantity );
+		await context.page.type( 'input.qty', context.vars.quantity.toString() );
 		await context.page.waitForSelector( "button[name='update_cart']" );
 		await context.page.click( "button[name='update_cart']" );
 
-		// Wait For AJAX Completion
-		await context.page.waitFor( 1500 );
-			//await context.page.screenshot( { path: 'step3-cart-qty-' + counter_start_ms + '.png', fullPage: true } );
+		// Wait For AJAX Refresh
+		await context.page.waitFor( 3000 );
 
 		// Click Checkout Button
-		clickAsMuchAsNeeded( context, 'a.checkout-button' );
+		await context.page.click( 'a.checkout-button' );
+
+		// Wait For AJAX Refresh
+		await context.page.waitFor( 3000 );
 
 		// Checkout Page Loaded
-		await context.page.waitForSelector( 'button#place_order', { timeout: 150000 } );
+		await context.page.waitForSelector( 'button#place_order' );
 
 		// Complete Checkout Form (AJAX)
 		await context.page.type( 'input#billing_first_name', 'Bill First Name ' + context.vars.name );
@@ -64,6 +67,9 @@ async function runTest( context, events, next ) {
 		await context.page.type( 'input#billing_phone', '111-222-3333' );
 		await context.page.type( 'input#billing_email', context.vars.name + '@codedcommerce.com' );
 
+		// Wait For AJAX Refresh
+		await context.page.waitFor( 3000 );
+
 		// Complete Payment Method (AJAX)
 		await context.page.click( "label[for='payment_method_cod']" );
 
@@ -72,51 +78,35 @@ async function runTest( context, events, next ) {
 		await context.page.type( "label[for='billing_state']", 'California' + String.fromCharCode( 13 ) );
 
 		// Wait For AJAX Refresh
-		await context.page.waitFor( 2000 );
-			//await context.page.screenshot( { path: 'step4-checkout-' + counter_start_ms + '.png', fullPage: true } );
+		await context.page.waitFor( 3000 );
 
 		// Submit Checkout
-		clickAsMuchAsNeeded( context, 'button#place_order' );
+		await context.page.click( 'button#place_order' );
 
 		// Order Receipt
-		await context.page.waitForSelector( 'li.order', { timeout: 100000 } );
+		await context.page.waitForSelector( 'li.order' );
 		context.vars.order_number = await context.page.evaluate(
 			() => document.querySelector( 'li.order strong' ).textContent
 		);
-			//await context.page.screenshot( { path: 'step5-order-' + counter_start_ms + '.png', fullPage: true } );
 
 		// Close Browser
 		await context.browser.close();
 
-		// End Counter
-		var counter_stop = new Date();
-		var counter_stop_ms = ( counter_stop.getTime() + '.' + counter_stop.getMilliseconds() );
-		context.vars.lapsed = Math.round( counter_stop_ms - counter_start_ms );
-
-		// Process Latency
-		events.emit( 'histogram', 'HeadlessChromiumLatency', context.vars.lapsed );
-
 	// Catch Errors
-	} catch( error ) {
-		console.log( 'ERROR with virtual user ' + counter_start_ms + ' ' + error );
+	} catch( err ) {
+		console.log( err );
 		await context.page.screenshot( { path: 'error-' + counter_start_ms + '.png', fullPage: true } );
+		await context.browser.close();
 	}
+
+	// End Counter
+	var counter_stop = new Date();
+	var counter_stop_ms = ( counter_stop.getTime() + '.' + counter_stop.getMilliseconds() );
+	context.vars.lapsed = Math.round( counter_stop_ms - counter_start_ms );
+
+	// Process Latency
+	events.emit( 'histogram', 'HeadlessChromiumLatency', context.vars.lapsed );
 
 	// Return
 	return next();
-}
-
-async function clickAsMuchAsNeeded( context, selector ) {
-	await context.page.click( selector );
-	for( var i = 0 ; i < 10; i ++ ) {
-		try {
-			var still_there = await context.page.evaluate(
-				() => document.querySelector( selector )
-			);
-			if( still_there !== null ) {
-				await context.page.click( selector );
-			}
-		} catch( error ) {
-		}
-	}
 }

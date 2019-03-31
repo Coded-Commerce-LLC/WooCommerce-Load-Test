@@ -1,9 +1,9 @@
 
 const puppeteer = require( '/usr/local/lib/node_modules/puppeteer' );
 
-const test_url = 'https://demo.acceleratedstore.com/';
+const test_url = 'https://demo.acceleratedstore.com/shop/';
 
-( async function f() {
+( async function runTest() {
 
 	try {
 
@@ -17,13 +17,13 @@ const test_url = 'https://demo.acceleratedstore.com/';
 		console.log( 'Opening URL' );
 		await page.goto( test_url, { 'waitUntil' : 'networkidle0' } );
 		await page.waitForSelector( "a[data-product_id='36']" );
-		await page.screenshot( { path: 'step1-home.png', fullPage: true } );
+		//await page.screenshot( { path: 'step1-home.png', fullPage: true } );
 
 		// Click Add To Cart Button
 		console.log( 'Clicking Add To Cart' );
 		await page.click( "a[data-product_id='36']" );
 		await page.waitForSelector( 'a.added_to_cart' );
-		await page.screenshot( { path: 'step2-added-to-cart.png', fullPage: true } );
+		//await page.screenshot( { path: 'step2-added-to-cart.png', fullPage: true } );
 
 		// Click View Cart Button
 		console.log( 'Clicking View Cart' );
@@ -38,12 +38,15 @@ const test_url = 'https://demo.acceleratedstore.com/';
 		await page.click( "button[name='update_cart']" );
 
 		// Wait For AJAX Refresh
-		await page.waitFor( 1000 );
-		await page.screenshot( { path: 'step3-cart-qty.png', fullPage: true } );
+		await page.waitFor( 3000 );
+		//await page.screenshot( { path: 'step3-cart-qty.png', fullPage: true } );
 
 		// Click Checkout Button
 		console.log( 'Clicking Checkout Button' );
 		await page.click( 'a.checkout-button' );
+
+		// Wait For AJAX Refresh
+		await page.waitFor( 3000 );
 
 		// Checkout Page Loaded
 		await page.waitForSelector( 'button#place_order' );
@@ -58,6 +61,9 @@ const test_url = 'https://demo.acceleratedstore.com/';
 		await page.type( 'input#billing_phone', '111-222-3333' );
 		await page.type( 'input#billing_email', 'tester@codedcommerce.com' );
 
+		// Wait For AJAX Refresh
+		await page.waitFor( 3000 );
+
 		// Complete Payment Method (AJAX)
 		await page.click( "label[for='payment_method_cod']" );
 
@@ -66,8 +72,8 @@ const test_url = 'https://demo.acceleratedstore.com/';
 		await page.type( "label[for='billing_state']", 'California' + String.fromCharCode( 13 ) );
 
 		// Wait For AJAX Refresh
-		await page.waitFor( 2000 );
-		await page.screenshot( { path: 'step4-checkout.png', fullPage: true } );
+		await page.waitFor( 3000 );
+		//await page.screenshot( { path: 'step4-checkout.png', fullPage: true } );
 
 		// Submit Checkout
 		console.log( 'Clicking Place Order Button' );
@@ -79,10 +85,7 @@ const test_url = 'https://demo.acceleratedstore.com/';
 			() => document.querySelector( 'li.order strong' ).textContent
 		);
 		console.log( 'Order placed: ' + order_number.trim() );
-		await page.screenshot( {
-			path: 'step5-order-' + order_number.trim() + '-placed.png',
-			fullPage: true
-		} );
+		//await page.screenshot( { path: 'step5-order-' + order_number.trim() + '-placed.png', fullPage: true } );
 
 		// Close Browser
 		await browser.close();
@@ -91,6 +94,7 @@ const test_url = 'https://demo.acceleratedstore.com/';
 	} catch( err ) {
 		console.log( err );
 		await page.screenshot( { path: 'error.png', fullPage: true } );
+		await browser.close();
 	}
 
 } )();

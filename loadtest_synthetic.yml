@@ -4,9 +4,9 @@ config:
   #  "rejectUnauthorized": false
   #}
   phases:
-    - duration: 10
+    - duration: 5
       arrivalRate: 1
-      rampTo: 10
+      rampTo: 2
   payload:
     path: "loadtest_payload.csv"
     fields:
