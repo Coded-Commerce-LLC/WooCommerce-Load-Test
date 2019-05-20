@@ -1,7 +1,7 @@
 
 const puppeteer = require( '/usr/local/lib/node_modules/puppeteer' );
 
-const test_url = 'https://demo.acceleratedstore.com/shop/';
+const test_url = 'https://dev-accelerated-store-demo.pantheonsite.io/shop/';
 
 ( async function runTest() {
 

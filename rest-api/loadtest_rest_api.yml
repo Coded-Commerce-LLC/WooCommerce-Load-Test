@@ -1,14 +1,14 @@
 config:
-  target: 'https://demo.acceleratedstore.com/'
+  target: 'https://dev-accelerated-store-demo.pantheonsite.io/shop/'
   #tls: {
   #  "rejectUnauthorized": false
   #}
   phases:
-    - duration: 45
+    - duration: 10
       arrivalRate: 1
-      rampTo: 5
+      rampTo: 1
   payload:
-    path: "loadtest_payload.csv"
+    path: "../loadtest_payload.csv"
     fields:
       - "name"
       - "product_id"
