@@ -69,7 +69,7 @@ const test_url = 'https://dev-accelerated-store-demo.pantheonsite.io/shop/';
 		await page.waitForSelector( 'li.order', { timeout: 0 } );
 
 		// Order Receipt
-		console.log( '11 - Clicking Place Order Button' );
+		console.log( '11 - Parsing Order Receipt' );
 		const order_number = await page.evaluate(
 			() => document.querySelector( 'li.order strong' ).textContent
 		);

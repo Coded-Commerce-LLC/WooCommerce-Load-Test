@@ -81,7 +81,7 @@ async function runTest( context, events, next ) {
 		await page.waitForSelector( 'li.order', { timeout: 0 } );
 
 		// Order Receipt
-		console.log( '11 - Clicking Place Order Button' );
+		console.log( '11 - Parsing Order Receipt' );
 		context.vars.order_number = await page.evaluate(
 			() => document.querySelector( 'li.order strong' ).textContent
 		);
