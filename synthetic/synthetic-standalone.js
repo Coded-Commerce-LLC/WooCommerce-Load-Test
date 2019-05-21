@@ -1,8 +1,11 @@
 
-const puppeteer = require( '/usr/local/lib/node_modules/puppeteer' );
-
+// Test Site
 const test_url = 'https://dev-accelerated-store-demo.pantheonsite.io/shop/';
 
+// Include Puppeteer
+const puppeteer = require( '/usr/local/lib/node_modules/puppeteer' );
+
+// Test Function
 ( async function runTest() {
 
 	try {
@@ -58,6 +61,7 @@ const test_url = 'https://dev-accelerated-store-demo.pantheonsite.io/shop/';
 		await page.waitForSelector( 'button#place_order', { timeout: 0 } );
 
 		// Complete Payment Method (AJAX)
+		await page.waitFor( 1000 );
 		console.log( '9 - Selecting COD Payment' );
 		await page.click( "label[for='payment_method_cod']" );
 		await page.waitForSelector( 'button#place_order', { timeout: 0 } );

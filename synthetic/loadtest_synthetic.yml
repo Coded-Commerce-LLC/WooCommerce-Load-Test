@@ -18,6 +18,4 @@ config:
 
 scenarios:
   - flow:
-    - log: "Start virtual user {{ name }}, product_id {{ product_id }}, quantity {{ quantity }}"
     - function: "runTest"
-    - log: "Stop virtual user {{ counter_start_ms }}, order number {{ order_number }}, lapsed {{ lapsed }} ms"

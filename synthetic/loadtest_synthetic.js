@@ -20,6 +20,9 @@ async function runTest( context, events, next ) {
 	context.vars.counter_start_ms = counter_start_ms;
 	const browser = await puppeteer.launch( { headless: true } );
 	const page = await browser.newPage();
+	const payload_qty = context.vars.quantity.toString();
+	const payload_product = context.vars.product_id;
+	const payload_name = context.vars.name;
 	await page.setViewport( { width: 1280, height: 1280 } )
 
 	try {
@@ -70,6 +73,7 @@ async function runTest( context, events, next ) {
 		await page.waitForSelector( 'button#place_order', { timeout: 0 } );
 
 		// Complete Payment Method (AJAX)
+		await page.waitFor( 1000 );
 		console.log( '9 - Selecting COD Payment' );
 		await page.click( "label[for='payment_method_cod']" );
 		await page.waitForSelector( 'button#place_order', { timeout: 0 } );
