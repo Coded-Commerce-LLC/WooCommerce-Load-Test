@@ -1,5 +1,5 @@
 config:
-  target: 'https://dev-accelerated-store-demo.pantheonsite.io/shop/'
+  target: 'https://dev-accelerated-store-demo.pantheonsite.io'
   #tls: {
   #  "rejectUnauthorized": false
   #}

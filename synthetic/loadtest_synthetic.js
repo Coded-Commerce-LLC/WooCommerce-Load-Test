@@ -1,6 +1,6 @@
 
 // Test Site
-const test_url = 'https://dev-accelerated-store-demo.pantheonsite.io/shop/';
+const test_url = 'https://dev-accelerated-store-demo.pantheonsite.io';
 
 // Exports
 module.exports = { runTest }
@@ -21,75 +21,51 @@ async function runTest( context, events, next ) {
 	const browser = await puppeteer.launch( { headless: true } );
 	const page = await browser.newPage();
 	const payload_qty = context.vars.quantity.toString();
-	const payload_product = context.vars.product_id;
+	const payload_productid = context.vars.product_id;
 	const payload_name = context.vars.name;
 	await page.setViewport( { width: 1280, height: 1280 } )
 
 	try {
 
-		// Hit URL
-		console.log( '1 - Opening URL' );
-		await page.goto( test_url, { 'waitUntil' : 'networkidle0', timeout: 0 } );
-		await page.waitForSelector( "a[data-product_id='36']", { timeout: 0 } );
-
-		// Click Add To Cart Button
-		console.log( '2 - Clicking Add To Cart' );
-		await page.click( "a[data-product_id='36']" );
-		await page.waitForSelector( 'a.added_to_cart', { timeout: 0 } );
-
-		// Click View Cart Button
-		console.log( '3 - Clicking View Cart' );
-		await page.click( 'a.added_to_cart' );
-		await page.waitForSelector( 'input.qty', { timeout: 0 } );
-
-		// Set Quantity (AJAX)
-		console.log( '4 - Changing Quantity Field' );
-		await page.evaluate( () => { document.querySelector( 'input.qty' ).value = '10' } );
-
-		// Updating Cart Quantity
-		console.log( '5 - Clicking Update Cart' );
-		await page.click( "button[name='update_cart']" );
-		await page.waitForSelector( 'a.checkout-button', { timeout: 0 } );
-
-		// Click Checkout Button
-		console.log( '6 - Clicking Checkout Button' );
-		await page.click( 'a.checkout-button' );
+		// Adding To Cart
+		console.log( '1 - Adding To Cart' );
+		await page.goto( test_url + '/checkout/?add-to-cart=' + payload_productid, { 'waitUntil' : 'networkidle0', timeout: 0 } );
 		await page.waitForSelector( 'button#place_order', { timeout: 0 } );
 
 		// Complete Checkout Form (AJAX)
-		console.log( '7 - Completing Checkout Form Fields' );
-		await page.evaluate( () => { document.querySelector( 'input#billing_first_name' ).value = 'First Name' } );
-		await page.evaluate( () => { document.querySelector( 'input#billing_last_name' ).value = 'Last Name' } );
+		console.log( '2 - Completing Checkout Form Fields' );
+		await page.evaluate( ( payload_name ) => { document.querySelector( 'input#billing_email' ).value = payload_name + '@codedcommerce.com' }, payload_name );
+		await page.evaluate( ( payload_name ) => { document.querySelector( 'input#billing_first_name' ).value = payload_name }, payload_name );
+		await page.evaluate( ( payload_name ) => { document.querySelector( 'input#billing_last_name' ).value = payload_name }, payload_name );
 		await page.evaluate( () => { document.querySelector( 'input#billing_address_1' ).value = '12345 Test St.' } );
 		await page.evaluate( () => { document.querySelector( 'input#billing_city' ).value = 'Los Angeles' } );
 		await page.evaluate( () => { document.querySelector( 'input#billing_postcode' ).value = '91307' } );
 		await page.evaluate( () => { document.querySelector( 'input#billing_phone' ).value = '111-222-3333' } );
-		await page.evaluate( () => { document.querySelector( 'input#billing_email' ).value = 'tester@codedcommerce.com' } );
 		await page.waitForSelector( 'button#place_order', { timeout: 0 } );
 
 		// State Drop Down (AJAX)
-		console.log( '8 - Selecting State Drop Down' );
+		console.log( '3 - Selecting State Drop Down' );
 		await page.select( 'select#billing_state', 'CA' );
 		await page.waitForSelector( 'button#place_order', { timeout: 0 } );
 
 		// Complete Payment Method (AJAX)
 		await page.waitFor( 1000 );
-		console.log( '9 - Selecting COD Payment' );
+		console.log( '4 - Selecting COD Payment' );
 		await page.click( "label[for='payment_method_cod']" );
 		await page.waitForSelector( 'button#place_order', { timeout: 0 } );
 
 		// Submit Checkout
 		await page.waitFor( 1000 );
-		console.log( '10 - Clicking Place Order Button' );
+		console.log( '5 - Clicking Place Order Button' );
 		await page.click( 'button#place_order' );
 		await page.waitForSelector( 'li.order', { timeout: 0 } );
 
 		// Order Receipt
-		console.log( '11 - Parsing Order Receipt' );
+		console.log( '6 - Parsing Order Receipt' );
 		context.vars.order_number = await page.evaluate(
 			() => document.querySelector( 'li.order strong' ).textContent
 		);
-		console.log( '12 - Order placed: ' + context.vars.order_number.trim() );
+		console.log( '7 - Order placed: ' + context.vars.order_number.trim() );
 
 		// Screen Shot
 		//await page.screenshot( { path: order_number.trim() + '.png', fullPage: true } );
