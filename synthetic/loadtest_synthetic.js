@@ -28,11 +28,11 @@ async function runTest( context, events, next ) {
 	try {
 
 		// Adding To Cart
-		console.log( '1 - Adding To Cart' );
+		console.log( '1 - Adding To Cart & Redirecting Checkout' );
 		await page.goto( test_url + '/checkout/?add-to-cart=' + payload_productid, { 'waitUntil' : 'networkidle0', timeout: 0 } );
 		await page.waitForSelector( 'button#place_order', { timeout: 0 } );
 
-		// Complete Checkout Form (AJAX)
+		// Complete Checkout Form
 		console.log( '2 - Completing Checkout Form Fields' );
 		await page.evaluate( ( payload_name ) => { document.querySelector( 'input#billing_email' ).value = payload_name + '@codedcommerce.com' }, payload_name );
 		await page.evaluate( ( payload_name ) => { document.querySelector( 'input#billing_first_name' ).value = payload_name }, payload_name );
@@ -43,12 +43,12 @@ async function runTest( context, events, next ) {
 		await page.evaluate( () => { document.querySelector( 'input#billing_phone' ).value = '111-222-3333' } );
 		await page.waitForSelector( 'button#place_order', { timeout: 0 } );
 
-		// State Drop Down (AJAX)
+		// State Drop Down
 		console.log( '3 - Selecting State Drop Down' );
 		await page.select( 'select#billing_state', 'CA' );
 		await page.waitForSelector( 'button#place_order', { timeout: 0 } );
 
-		// Complete Payment Method (AJAX)
+		// Complete Payment Method
 		await page.waitFor( 1000 );
 		console.log( '4 - Selecting COD Payment' );
 		await page.click( "label[for='payment_method_cod']" );
@@ -73,7 +73,7 @@ async function runTest( context, events, next ) {
 	// Catch Errors
 	} catch( err ) {
 		console.log( err );
-		//await page.screenshot( { path: 'error.png', fullPage: true } );
+		await page.screenshot( { path: 'error-' + context.vars.counter_start_ms + '.png', fullPage: true } );
 	}
 
 	// Close Browser

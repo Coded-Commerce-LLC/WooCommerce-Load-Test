@@ -16,11 +16,11 @@ const puppeteer = require( '/usr/local/lib/node_modules/puppeteer' );
 		await page.setViewport( { width: 1280, height: 1280 } )
 
 		// Adding To Cart
-		console.log( '1 - Adding To Cart' );
+		console.log( '1 - Adding To Cart & Redirecting Checkout' );
 		await page.goto( test_url + '/checkout/?add-to-cart=36', { 'waitUntil' : 'networkidle0', timeout: 0 } );
 		await page.waitForSelector( 'button#place_order', { timeout: 0 } );
 
-		// Complete Checkout Form (AJAX)
+		// Complete Checkout Form
 		console.log( '2 - Completing Checkout Form Fields' );
 		await page.evaluate( () => { document.querySelector( 'input#billing_email' ).value = 'tester@codedcommerce.com' } );
 		await page.evaluate( () => { document.querySelector( 'input#billing_first_name' ).value = 'First Name' } );
@@ -31,12 +31,12 @@ const puppeteer = require( '/usr/local/lib/node_modules/puppeteer' );
 		await page.evaluate( () => { document.querySelector( 'input#billing_phone' ).value = '111-222-3333' } );
 		await page.waitForSelector( 'button#place_order', { timeout: 0 } );
 
-		// State Drop Down (AJAX)
+		// State Drop Down
 		console.log( '3 - Selecting State Drop Down' );
 		await page.select( 'select#billing_state', 'CA' );
 		await page.waitForSelector( 'button#place_order', { timeout: 0 } );
 
-		// Complete Payment Method (AJAX)
+		// Complete Payment Method
 		await page.waitFor( 1000 );
 		console.log( '4 - Selecting COD Payment' );
 		await page.click( "label[for='payment_method_cod']" );
